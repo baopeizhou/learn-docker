@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: zkmanager
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+server:
+  port: 8080
