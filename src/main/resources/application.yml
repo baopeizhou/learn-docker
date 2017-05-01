@@ -19,15 +19,5 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20  
     filters: stat,wall,log4j  
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000 
-  redis:
-    database: 1
-    password: Mm_1989321
-    pool:
-      max-active: 18
-      max-wait: 4
-      max-idle: 16
-      min-idle: 2     
-    sentinel: 
-      master: mymaster
-      nodes: 118.89.146.110:26379,120.25.224.153:26379
+  
     

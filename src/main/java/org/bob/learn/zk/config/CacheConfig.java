@@ -64,7 +64,7 @@ public class CacheConfig {
 		};
 	}
 
-	@Bean
+	/*@Bean
 	public RedisTemplate<String, String> stringRedisTemplate(RedisConnectionFactory factory) {
 		StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(factory);
 		stringRedisTemplate.setEnableTransactionSupport(true);
@@ -90,13 +90,13 @@ public class CacheConfig {
 	@Bean
 	public RedisCacheManager redisCacheManager(RedisTemplate<String, Object> objectRedisTemplate) {
 		return new RedisCacheManager(objectRedisTemplate);
-	}
+	}*/
 
 	@Bean  
 	@Primary  
-	public CacheManager cacheManager(RedisCacheManager redisCacheManager,JCacheCacheManager jcacheCacheManager) {  
+	public CacheManager cacheManager(JCacheCacheManager jcacheCacheManager) {  
 	    MixCacheManager cacheManager = new MixCacheManager();  
-	    cacheManager.setRedisCacheManager(redisCacheManager);  
+	    cacheManager.setRedisCacheManager(null);  
 	    cacheManager.setMemCacheManager(jcacheCacheManager);  
 	    return cacheManager;  
 	}  
