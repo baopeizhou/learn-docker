@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 只需配置好 log.dir 和 projectname 属性-->
+<configuration debug="false">
+	<property name="log.dir" value="/alidata1/admin/pkufi-cloudshare" />
+	<property name="projectname" value="is-goods" />
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+		<encoder charset="UTF-8">
+			<pattern>%d [%thread] %-5p [%c] [%F:%L] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="infoAppender"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/logs/${HOSTNAME}_${projectname}.log</file>
+	<!--	<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter> -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/logs/${HOSTNAME}_${projectname}-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-Trace-Id:-},span=%X{X-Span-Id:-},parent=%X{X-Parent-Id:-},name=%X{X-Span-Name:-},app=%X{appname:-},begintime=%X{begintime:-},endtime=%X{fin-X1-time:-}] - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="errorAppender"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/logs/${HOSTNAME}_${projectname}_error.log</file>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/logs/${HOSTNAME}_${projectname}_error-%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-Trace-Id:-},span=%X{X-Span-Id:-},parent=%X{X-Parent-Id:-},name=%X{X-Span-Name:-},app=%X{appname:-},begintime=%X{begintime:-},endtime=%X{fin-X1-time:-}] - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="asyncSTDOUTAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="STDOUT" />
+	</appender>
+	<appender name="asyncInfoAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="infoAppender" />
+	</appender>
+	<appender name="asyncErrorAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>512</queueSize>
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="errorAppender" />
+	</appender>
+	<logger name="org.apache">
+		<level value="INFO" />
+		<appender-ref ref="asyncErrorAppender" />
+		<appender-ref ref="asyncInfoAppender" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="DEBUG" />
+		<appender-ref ref="asyncErrorAppender" />
+		<appender-ref ref="asyncInfoAppender" />
+	</logger>
+	<logger name="org.bob.is">
+		<level value="DEBUG" />
+		<appender-ref ref="asyncErrorAppender" />
+		<appender-ref ref="asyncInfoAppender" />
+	</logger>
+
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="asyncSTDOUTAppender" />
+	</root>
+</configuration>
